@@ -4,7 +4,7 @@
 #' each python code snippet in an executable python cell for Rmarkdown
 #' @param md_text markdown text as string
 transform_python_cells <- function(md_text) {
-  stringr::str_replace_all(md_text, "```python", "```{{python }}" )
+  stringr::str_replace_all(md_text, "```python", "```{python}" )
 }
 
 #' Make a Slug out of a Title
