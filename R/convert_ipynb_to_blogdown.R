@@ -4,7 +4,7 @@
 #' each python code snippet in an executable python cell for Rmarkdown
 #' @param md_text markdown text as string
 transform_python_cells <- function(md_text) {
-  str_replace_all(md_text, "```python", "```{{python }}" )
+  stringr::str_replace_all(md_text, "```python", "```{{python }}" )
 }
 
 #' Make a Slug out of a Title
@@ -14,9 +14,9 @@ transform_python_cells <- function(md_text) {
 #' @examples make_slub("This is a nice title")
 #' @importFrom magrittr "%>%"
 make_slug <- function(title) {
-  str_replace_all(title, "[[:punct:]]", "") %>%
-    str_to_lower() %>%
-    str_replace_all("[[:space:]]", "-")
+  stringr::str_replace_all(title, "[[:punct:]]", "") %>%
+    stringr::str_to_lower() %>%
+    stringr::str_replace_all("[[:space:]]", "-")
 }
 
 #' Add a YAML header
@@ -61,7 +61,7 @@ add_yaml <- function(md_text, title="", author="", date=lubridate::today(), blog
 #' This function removes any png plot outputs.
 #' @param md_text markdown text as string
 remove_pngs <- function(md_text) {
-  str_replace_all(md_text, "!\\[png\\]\\(.*?\\)", "")
+  stringr::str_replace_all(md_text, "!\\[png\\]\\(.*?\\)", "")
 }
 
 #' Add a reticulate Cell
@@ -102,7 +102,7 @@ md_to_Rmd <- function(md_file, output_file = "",
                       python_path = reticulate::py_config()$python) {
   md_text <- read_file(md_file)
   if (output_file == "" ) {
-    rmd_path <- str_replace(md_file, ".md", ".Rmd") }
+    rmd_path <- stringr::str_replace(md_file, ".md", ".Rmd") }
   else {
     rmd_path <- output_file
   }
@@ -122,14 +122,14 @@ md_to_Rmd <- function(md_file, output_file = "",
 ipynb_to_md <- function(ipynb_file) {
   dir_name <- dirname(ipynb_file)
   file_name <- basename(ipynb_file)
-  output_filename <- str_replace(file_name, ".ipynb", "")
+  output_filename <- stringr::str_replace(file_name, ".ipynb", "")
   temp_file <- file.path(dir_name, glue::glue("temp_{file_name}") )
   system(glue::glue("cat '{ipynb_file}' | nbstripout > '{temp_file}'") )
   system2("jupyter", args = c("nbconvert",
                               glue::glue("--output '{output_filename}'"),
                               glue::glue("--to markdown '{temp_file}'"), "--ClearMetadataPreprocessor.enabled=True", "--ClearOutput.enabled=True"))
   system2("rm", args = c(glue::glue("'{temp_file}'")) )
-  str_replace(ipynb_file, ".ipynb", ".md")
+  stringr::str_replace(ipynb_file, ".ipynb", ".md")
 }
 
 #' Convert Jupyter Notebook to Rmd
@@ -161,7 +161,7 @@ ipynb_to_blogdown_post <- function(ipynb_file,
                                    author = "",
                                    date=lubridate::today(),
                                    ...){
-  if (title == "") title <- str_replace( basename( ipynb_file), ".ipynb", "")
+  if (title == "") title <- stringr::str_replace( basename( ipynb_file), ".ipynb", "")
   slug <- make_slug(title)
   file_name <- glue::glue("{date}-{slug}.Rmd")
   output_file <- here::here("content", "post", file_name)
