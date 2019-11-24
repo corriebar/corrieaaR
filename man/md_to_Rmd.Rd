@@ -26,11 +26,11 @@ md_to_Rmd(
 
 \item{author}{author. Defaults to ""}
 
-\item{date}{day of creation as string. Defaults to \code{\link{today()}}}
+\item{date}{day of creation as string. Defaults to \code{\link{lubridate::today()}}}
 
 \item{blogdown}{logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated. Defaults to FALSE}
 
-\item{python_path}{python path as string for reticulate. Defaults to the one detected by \code{\link{py_config()}}}
+\item{python_path}{python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}}
 }
 \description{
 Converts a markdown file containing python code chunks to a

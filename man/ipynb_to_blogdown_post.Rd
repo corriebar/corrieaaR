@@ -22,7 +22,7 @@ ipynb_to_blogdown_post(
 
 \item{author}{author. Defaults to ""}
 
-\item{date}{day of creation as string. Defaults to \code{\link{today()}}}
+\item{date}{day of creation as string. Defaults to \code{\link{lubridate::today()}}}
 
 \item{...}{arguments passed to \code{\link{md_to_Rmd}} such as the python path used for reticulate}
 }

@@ -68,7 +68,7 @@ remove_pngs <- function(md_text) {
 #'
 #' This function adds a cell calling the reticulate library
 #' to the beginning of the markdown text.
-#' @param python_path python path as string for reticulate. Defaults to the one detected by \code{\link{py_config()}}
+#' @param python_path python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}
 #' @param chunk_options string. Passes options to kitr::opts_chunk$set()
 add_reticulate <- function(md_text, python_path = reticulate::py_config()$python, chunk_options="") {
   reticulate_cell <- glue::glue("```{{r, include=FALSE}}
@@ -89,9 +89,9 @@ add_reticulate <- function(md_text, python_path = reticulate::py_config()$python
 #' @param chunk_options string. Passes options to kitr::opts_chunk$set(). Defaults to ""
 #' @param title title of the markdown. Defaults to ""
 #' @param author author. Defaults to ""
-#' @param date day of creation as string. Defaults to \code{\link{today()}}
+#' @param date day of creation as string. Defaults to \code{\link{lubridate::today()}}
 #' @param blogdown logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated. Defaults to FALSE
-#' @param python_path python path as string for reticulate. Defaults to the one detected by \code{\link{py_config()}}
+#' @param python_path python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}
 #' @importFrom magrittr "%>%"
 md_to_Rmd <- function(md_file, output_file = "",
                       chunk_options="",
@@ -152,7 +152,7 @@ ipynb_to_Rmd <- function(ipynb_file, output_file = "", blogdown, ...) {
 #' @param chunk_options string. Passes options to kitr::opts_chunk$set(). Defaults to ""
 #' @param title title of the markdown. Defaults to ""
 #' @param author author. Defaults to ""
-#' @param date day of creation as string. Defaults to \code{\link{today()}}
+#' @param date day of creation as string. Defaults to \code{\link{lubridate::today()}}
 #' @param ... arguments passed to \code{\link{md_to_Rmd}} such as the python path used for reticulate
 #' @export
 ipynb_to_blogdown_post <- function(ipynb_file,

@@ -11,7 +11,7 @@ add_reticulate(
 )
 }
 \arguments{
-\item{python_path}{python path as string for reticulate. Defaults to the one detected by \code{\link{py_config()}}}
+\item{python_path}{python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}}
 
 \item{chunk_options}{string. Passes options to kitr::opts_chunk$set()}
 }
