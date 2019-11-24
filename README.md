@@ -28,17 +28,20 @@ In your blogdown project, execute the following:
 ``` r
 library(corrieaar)
 notebook_file <- "path/to/awesome_notebook.ipynb"
-ipynb_to_blogdown_post(notebook_file)
+new_post_from_ipynb(notebook_file)
 ```
-This creates an .Rmd file in the `content/post` folder. You'll still have to knitter the Rmarkdown file before serving it.
+This creates an .Rmd file in the `content/post` folder. Blogdown will then render the notebook first (that is, execute it) when you run `serve_site()`
+```r
+blogdown::serve_site()
+```
 You can pass global chunk options and specify the Python version which `reticulate` should use:
 ```r
-ipynb_to_blogdown_post(notebook_file, 
-                        chunk_options = "echo=FALSE",
-                        python_path = "path/to/your/bin/python")
+new_post_from_ipynb(notebook_file, 
+                    chunk_options = "echo=FALSE",
+                    python_path = "path/to/your/bin/python")
 ```        
 
 To only convert to an .Rmd use the following:
 ```r
-ipynb_to_Rmd(notebook_file)
+Rmd_from_ipynb(notebook_file)
 ```

@@ -4,13 +4,7 @@
 \alias{add_yaml}
 \title{Add a YAML header}
 \usage{
-add_yaml(
-  md_text,
-  title = "",
-  author = "",
-  date = lubridate::today(),
-  blogdown = FALSE
-)
+add_yaml(md_text, title = "", author = "", date = Sys.Date())
 }
 \arguments{
 \item{md_text}{markdown text as string}
@@ -19,10 +13,8 @@ add_yaml(
 
 \item{author}{author as string. Defaults to ""}
 
-\item{date}{day of creation as string. Defaults to \code{\link{today()}}}
-
-\item{blogdown}{logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated. Defaults to FALSE}
+\item{date}{day of creation as string. Defaults to \code{Sys.Date()}}
 }
 \description{
-Adds a YAML header to your markdown
+Adds a YAML header to your markdown text
 }

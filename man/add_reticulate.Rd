@@ -13,7 +13,7 @@ add_reticulate(
 \arguments{
 \item{python_path}{python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}}
 
-\item{chunk_options}{string. Passes options to kitr::opts_chunk$set()}
+\item{chunk_options}{string. Passes options to \code{\link{knitr::opts_chunk$set()}}}
 }
 \description{
 This function adds a cell calling the reticulate library

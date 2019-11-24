@@ -7,52 +7,20 @@ transform_python_cells <- function(md_text) {
   stringr::str_replace_all(md_text, "```python", "```{python}" )
 }
 
-#' Make a Slug out of a Title
-#'
-#' This function parses a title into a slug
-#' @param title title as string
-#' @examples make_slub("This is a nice title")
-#' @importFrom magrittr "%>%"
-make_slug <- function(title) {
-  stringr::str_replace_all(title, "[[:punct:]]", "") %>%
-    stringr::str_to_lower() %>%
-    stringr::str_replace_all("[[:space:]]", "-")
-}
-
 #' Add a YAML header
 #'
-#' Adds a YAML header to your markdown
+#' Adds a YAML header to your markdown text
 #' @param md_text markdown text as string
 #' @param title title of the markdown as string. Defaults to ""
 #' @param author author as string. Defaults to ""
-#' @param date day of creation as string. Defaults to \code{\link{today()}}
-#' @param blogdown logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated. Defaults to FALSE
-add_yaml <- function(md_text, title="", author="", date=lubridate::today(), blogdown=FALSE) {
-  if (blogdown) {
-    slug <- make_slug(title)
-    yaml_header <- glue::glue("---
-    title: '{title}'
-    author: {author}
-    date: '{date}'
-    slug: {slug}
-    categories: []
-    tags: []
-    comments: yes
-    image: images/tea_with_books.jpg
-    menu: ''
-    share: yes
-    ---
-
-    ")
-  }
-  else {
+#' @param date day of creation as string. Defaults to \code{Sys.Date()}
+add_yaml <- function(md_text, title="", author="", date=Sys.Date()) {
     yaml_header <- glue::glue("---
     title: '{title}'
     author: '{author}'
     date: '{date}'
     output: html_document
     ---")
-  }
   glue::glue("{yaml_header}\n{md_text}")
 }
 
@@ -69,7 +37,7 @@ remove_pngs <- function(md_text) {
 #' This function adds a cell calling the reticulate library
 #' to the beginning of the markdown text.
 #' @param python_path python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}
-#' @param chunk_options string. Passes options to kitr::opts_chunk$set()
+#' @param chunk_options string. Passes options to \code{\link{knitr::opts_chunk$set()}}
 add_reticulate <- function(md_text, python_path = reticulate::py_config()$python, chunk_options="") {
   reticulate_cell <- glue::glue("```{{r, include=FALSE}}
   knitr::opts_chunk$set({chunk_options})
@@ -83,35 +51,17 @@ add_reticulate <- function(md_text, python_path = reticulate::py_config()$python
 #' Convert a md to rmd
 #'
 #' Converts a markdown file containing python code chunks to a
-#' Rmd file using reticulate
+#' Rmd file with a reticulate chunk. Returns the Rmd string without YAML header
 #' @param md_file path to the markdown file
-#' @param output_file path to the generated Rmd-file. Defaults to the same name as the input file
-#' @param chunk_options string. Passes options to kitr::opts_chunk$set(). Defaults to ""
-#' @param title title of the markdown. Defaults to ""
-#' @param author author. Defaults to ""
-#' @param date day of creation as string. Defaults to \code{\link{lubridate::today()}}
-#' @param blogdown logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated. Defaults to FALSE
+#' @param chunk_options string. Passes options to \code{\link{knitr::opts_chunk$set()}}. Defaults to ""
 #' @param python_path python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}
-#' @importFrom magrittr "%>%"
-md_to_Rmd <- function(md_file, output_file = "",
-                      chunk_options="",
-                      title = "",
-                      author = "",
-                      date=lubridate::today(),
-                      blogdown = FALSE,
-                      python_path = reticulate::py_config()$python) {
+md_to_Rmd_text <- function(md_file,
+                           chunk_options = "",
+                           python_path = reticulate::py_config()$python) {
   md_text <- readr::read_file(md_file)
-  if (output_file == "" ) {
-    rmd_path <- stringr::str_replace(md_file, ".md", ".Rmd") }
-  else {
-    rmd_path <- output_file
-  }
 
-  transform_python_cells(md_text) %>%
-    add_reticulate(python_path, chunk_options = chunk_options) %>%
-    add_yaml(title = title, author = author, date = date, blogdown = blogdown ) %>%
-
-  readr::write_file(path=rmd_path)
+  md_text <- transform_python_cells(md_text)
+  add_reticulate(md_text, python_path, chunk_options = chunk_options)
 }
 
 #' Jupyter Notebook to markdown
@@ -134,40 +84,82 @@ ipynb_to_md <- function(ipynb_file) {
 
 #' Convert Jupyter Notebook to Rmd
 #'
-#' Converts a jupyter notebook to rmd.
+#' Converts a jupyter notebook to Rmd style md. Returns the string without YAML header.
 #' @param ipynb_file path to the jupyter notebook
-#' @param output_file path to the generated Rmd-file. Defaults to the same name as the input file
-#' @param blogdown logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated. Defaults to False
-#' @param ... arguments to be passed to \code{\link{md_to_Rmd}} such as title, author, or date
-#' @export
-ipynb_to_Rmd <- function(ipynb_file, output_file = "", blogdown = FALSE, ...) {
+#' @param chunk_options string. Passes options to \code{\link{knitr::opts_chunk$set()}}. Defaults to ""
+#' @param python_path python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}
+ipynb_to_Rmd_text <- function(ipynb_file,
+                              chunk_options = "",
+                              python_path = reticulate::py_config()$python) {
   md_file <- ipynb_to_md(ipynb_file)
-  md_to_Rmd(md_file, output_file = output_file, blogdown = blogdown, ...)
+  md_to_Rmd_text(md_file, chunk_options, python_path)
 }
 
-#' Convert Jupyter Notebook to Blogdown Post
+#' Creates a new Blogdown Post from a Jupyter Notebook
 #'
-#' Converts a jupyter notebook to a Blogdown post.
+#' Creates a new blogdown post and appends the jupyter
+#' notebook content as Rmd-style text.
 #' @param ipynb_file path to the jupyter notebook
-#' @param chunk_options string. Passes options to kitr::opts_chunk$set(). Defaults to ""
-#' @param title title of the markdown. Defaults to ""
-#' @param author author. Defaults to ""
-#' @param date day of creation as string. Defaults to \code{\link{lubridate::today()}}
-#' @param ... arguments passed to \code{\link{md_to_Rmd}} such as the python path used for reticulate
+#' @param chunk_options global chunk options as charachter vector. Passes options to \code{\link{knitr::opts_chunk$set()}}. Defaults to ""
+#' @param python_path python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}
+#' @param title title of the markdown. Defaults to the name of the notebook
+#' @param kind content type to create
+#' @param open whether to open the generated file after creation
+#' @param author author.
+#' @param categories character vector of category names
+#' @param tags character vector of tag names
+#' @param date date of the post. Defaults to \code{Sys.Date()}
+#' @param file filename of the post. Will be automatically generated by default from the title
+#' @param slug slug of the post. Also automatically generated by default from the title
+#' @param title_case function to convert the title to title case
+#' @param subdir if specified the post will be generated in a subdirectoy of 'content/'
+#' @param ext extension of the generated file. Defaults to .Rmd
+#' @return Returns the file name of the newly generated file.
+#' @seealso [blogdown::new_post()] which this function wraps.
 #' @export
-ipynb_to_blogdown_post <- function(ipynb_file,
-                                   chunk_options = "",
-                                   title = "",
-                                   author = "",
-                                   date=lubridate::today(),
-                                   ...){
-  if (title == "") title <- stringr::str_replace( basename( ipynb_file), ".ipynb", "")
-  slug <- make_slug(title)
-  file_name <- glue::glue("{date}-{slug}.Rmd")
-  output_file <- here::here("content", "post", file_name)
-  ipynb_to_Rmd(ipynb_file, output_file = output_file,
-               title=title, author=author, date=date,
-               chunk_options = chunk_options, blogdown = TRUE,
-               ... )
+new_post_from_ipynb <- function(ipynb_file, chunk_options = "", python_path = reticulate::py_config()$python,
+                                title="", kind = "", open = interactive(), author = getOption("blogdown.author"),
+                                categories = NULL, tags = NULL, date = Sys.Date(), file = NULL,
+                                slug = NULL, title_case = getOption("blogdown.title_case"),
+                                subdir = getOption("blogdown.subdir", "post"), ext = getOption("blogdown.ext",
+                                                                                               ".Rmd")) {
+  if (title == "")  title <- stringr::str_replace( basename( ipynb_file), ".ipynb", "")
+
+  new_post_file <- blogdown::new_post(title, kind = kind, open = FALSE, author = author,
+                     categories = categories, tags = tags, date = date, file = file,
+                     slug = slug, title_case = title_case,
+                     subdir = subdir, ext = ext )
+  generated_rmd <- ipynb_to_Rmd_text(ipynb_file, chunk_options, python_path )
+
+  write(generated_rmd, file=new_post_file, append = TRUE)
+
+  if (open)
+    blogdown:::open_file(new_post_file)
+  new_post_file
+
 }
 
+#' Creates an Rmd file from a Jupyter Notebook
+#'
+#' @param ipynb_file path to the jupyter notebook
+#' @param chunk_options global chunk options as charachter vector. Passes options to kitr::opts_chunk$set(). Defaults to ""
+#' @param python_path python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}
+#' @param open whether to open the generated file after creation
+#' @param title title of the markdown as string. Defaults to ""
+#' @param author author as string. Defaults to ""
+#' @param date day of creation as string. Defaults to \code{Sys.Date()}
+#' @export
+Rmd_from_ipynb <- function(ipynb_file, chunk_options = "", python_path = reticulate::py_config()$python,
+                           open = interactive(), title = "", author = "", date = Sys.Date()) {
+  generated_rmd <- ipynb_to_Rmd_text(ipynb_file, chunk_options, python_path)
+
+  output_filename <- stringr::str_replace(ipynb_file, ".ipynb", ".Rmd")
+
+  rmd_text <- add_yaml(generated_rmd, title, author, date)
+  write(rmd_text, file=output_filename)
+
+  if (open)
+    blogdown:::open_file(output_filename)
+  output_filename
+
+}
