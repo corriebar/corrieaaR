@@ -137,10 +137,10 @@ ipynb_to_md <- function(ipynb_file) {
 #' Converts a jupyter notebook to rmd.
 #' @param ipynb_file path to the jupyter notebook
 #' @param output_file path to the generated Rmd-file. Defaults to the same name as the input file
-#' @param blogdown logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated.
+#' @param blogdown logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated. Defaults to False
 #' @param ... arguments to be passed to \code{\link{md_to_Rmd}} such as title, author, or date
 #' @export
-ipynb_to_Rmd <- function(ipynb_file, output_file = "", blogdown, ...) {
+ipynb_to_Rmd <- function(ipynb_file, output_file = "", blogdown = FALSE, ...) {
   md_file <- ipynb_to_md(ipynb_file)
   md_to_Rmd(md_file, output_file = output_file, blogdown = blogdown, ...)
 }

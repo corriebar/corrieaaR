@@ -4,14 +4,14 @@
 \alias{ipynb_to_Rmd}
 \title{Convert Jupyter Notebook to Rmd}
 \usage{
-ipynb_to_Rmd(ipynb_file, output_file = "", blogdown, ...)
+ipynb_to_Rmd(ipynb_file, output_file = "", blogdown = FALSE, ...)
 }
 \arguments{
 \item{ipynb_file}{path to the jupyter notebook}
 
 \item{output_file}{path to the generated Rmd-file. Defaults to the same name as the input file}
 
-\item{blogdown}{logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated.}
+\item{blogdown}{logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated. Defaults to False}
 
 \item{...}{arguments to be passed to \code{\link{md_to_Rmd}} such as title, author, or date}
 }
