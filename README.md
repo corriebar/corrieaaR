@@ -11,7 +11,7 @@ A collection of function I frequently use. Use with care.
 You can install the latest version of corrieaaR from Github with:
 
 ``` r
-devtools::install_github("corriebar/corrieaar")
+devtools::install_github("corriebar/corrieaaR")
 ```
 
 ## Requirements
