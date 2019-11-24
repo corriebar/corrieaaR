@@ -1,0 +1,13 @@
+Package: corrieaar
+Title: Collection of useful Functions
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Corrie",
+           family = "Bartelheimer",
+           role = c("aut", "cre"),
+           email = "corrie.b@web.de")
+Description: My own package that contains a collection of useful functions I frequently use.
+License: GPL-3 
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.1.9000
