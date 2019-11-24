@@ -16,7 +16,7 @@ devtools::install_github("corriebar/corrieaar")
 
 ## Requirements
 
-You'll need [`nbconvert`](https://nbconvert.readthedocs.io/en/latest/) and [`nbstripout`](https://github.com/kynan/nbstripout) which you can install as follow:
+You'll need [`nbconvert`](https://nbconvert.readthedocs.io/en/latest/) and [`nbstripout`](https://github.com/kynan/nbstripout) which you can install as follows:
 ```
 pip install nbconvert nbstripout
 ```
