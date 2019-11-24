@@ -14,6 +14,13 @@ You can install the latest version of corrieaaR from Github with:
 devtools::install_github("corriebar/corrieaar")
 ```
 
+## Requirements
+
+You'll need [`nbconvert`](https://nbconvert.readthedocs.io/en/latest/) and [`nbstripout`](https://github.com/kynan/nbstripout) which you can install as follow:
+```
+pip install nbconvert nbstripout
+```
+
 ## Convert jupyter notebook to Rmd
 
 I build this package to be able to convert jupyter notebooks with Python code to an .Rmd file, in particular to then be used for a blogdown blog post.
