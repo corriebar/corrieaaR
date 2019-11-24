@@ -100,7 +100,7 @@ md_to_Rmd <- function(md_file, output_file = "",
                       date=lubridate::today(),
                       blogdown = FALSE,
                       python_path = reticulate::py_config()$python) {
-  md_text <- read_file(md_file)
+  md_text <- readr::read_file(md_file)
   if (output_file == "" ) {
     rmd_path <- stringr::str_replace(md_file, ".md", ".Rmd") }
   else {
@@ -111,7 +111,7 @@ md_to_Rmd <- function(md_file, output_file = "",
     add_reticulate(python_path, chunk_options = chunk_options) %>%
     add_yaml(title = title, author = author, date = date, blogdown = blogdown ) %>%
 
-  write_file(path=rmd_path)
+  readr::write_file(path=rmd_path)
 }
 
 #' Jupyter Notebook to markdown
