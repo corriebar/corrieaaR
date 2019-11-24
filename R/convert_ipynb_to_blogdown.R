@@ -1,9 +1,3 @@
-library(tidyverse)
-library(lubridate)
-library(glue)
-library(reticulate)
-library(here)
-
 #' Transform Python Markdown Code Snippets
 #'
 #' This function takes a markdown-text as string-input and transforms
@@ -18,6 +12,7 @@ transform_python_cells <- function(md_text) {
 #' This function parses a title into a slug
 #' @param title title as string
 #' @examples make_slub("This is a nice title")
+#' @importFrom magrittr "%>%"
 make_slug <- function(title) {
   str_replace_all(title, "[[:punct:]]", "") %>%
     str_to_lower() %>%
@@ -32,10 +27,10 @@ make_slug <- function(title) {
 #' @param author author as string. Defaults to ""
 #' @param date day of creation as string. Defaults to \code{\link{today()}}
 #' @param blogdown logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated. Defaults to FALSE
-add_yaml <- function(md_text, title="", author="", date=today(), blogdown=FALSE) {
+add_yaml <- function(md_text, title="", author="", date=lubridate::today(), blogdown=FALSE) {
   if (blogdown) {
     slug <- make_slug(title)
-    yaml_header <- glue("---
+    yaml_header <- glue::glue("---
     title: '{title}'
     author: {author}
     date: '{date}'
@@ -51,14 +46,14 @@ add_yaml <- function(md_text, title="", author="", date=today(), blogdown=FALSE)
     ")
   }
   else {
-    yaml_header <- glue("---
+    yaml_header <- glue::glue("---
     title: '{title}'
     author: '{author}'
     date: '{date}'
     output: html_document
     ---")
   }
-  glue("{yaml_header}\n{md_text}")
+  glue::glue("{yaml_header}\n{md_text}")
 }
 
 #' Removes Plot Outputs
@@ -76,13 +71,13 @@ remove_pngs <- function(md_text) {
 #' @param python_path python path as string for reticulate. Defaults to the one detected by \code{\link{py_config()}}
 #' @param chunk_options string. Passes options to kitr::opts_chunk$set()
 add_reticulate <- function(md_text, python_path = reticulate::py_config()$python, chunk_options="") {
-  reticulate_cell <- glue("```{{r, include=FALSE}}
+  reticulate_cell <- glue::glue("```{{r, include=FALSE}}
   knitr::opts_chunk$set({chunk_options})
   library(reticulate)
   use_python('{python_path}', required = T)
   ```")
 
-  glue("{reticulate_cell}\n{md_text}",)
+  glue::glue("{reticulate_cell}\n{md_text}",)
 }
 
 #' Convert a md to rmd
@@ -97,11 +92,12 @@ add_reticulate <- function(md_text, python_path = reticulate::py_config()$python
 #' @param date day of creation as string. Defaults to \code{\link{today()}}
 #' @param blogdown logical indicating if a blogdown header should be generated. Otherwise a normal .Rmd header is generated. Defaults to FALSE
 #' @param python_path python path as string for reticulate. Defaults to the one detected by \code{\link{py_config()}}
+#' @importFrom magrittr "%>%"
 md_to_Rmd <- function(md_file, output_file = "",
                       chunk_options="",
                       title = "",
                       author = "",
-                      date=today(),
+                      date=lubridate::today(),
                       blogdown = FALSE,
                       python_path = reticulate::py_config()$python) {
   md_text <- read_file(md_file)
@@ -127,12 +123,12 @@ ipynb_to_md <- function(ipynb_file) {
   dir_name <- dirname(ipynb_file)
   file_name <- basename(ipynb_file)
   output_filename <- str_replace(file_name, ".ipynb", "")
-  temp_file <- file.path(dir_name, glue("temp_{file_name}") )
-  system(glue("cat '{ipynb_file}' | nbstripout > '{temp_file}'") )
+  temp_file <- file.path(dir_name, glue::glue("temp_{file_name}") )
+  system(glue::glue("cat '{ipynb_file}' | nbstripout > '{temp_file}'") )
   system2("jupyter", args = c("nbconvert",
-                              glue("--output '{output_filename}'"),
-                              glue("--to markdown '{temp_file}'"), "--ClearMetadataPreprocessor.enabled=True", "--ClearOutput.enabled=True"))
-  system2("rm", args = c(glue("'{temp_file}'")) )
+                              glue::glue("--output '{output_filename}'"),
+                              glue::glue("--to markdown '{temp_file}'"), "--ClearMetadataPreprocessor.enabled=True", "--ClearOutput.enabled=True"))
+  system2("rm", args = c(glue::glue("'{temp_file}'")) )
   str_replace(ipynb_file, ".ipynb", ".md")
 }
 
@@ -156,18 +152,18 @@ ipynb_to_Rmd <- function(ipynb_file, output_file = "", blogdown, ...) {
 #' @param chunk_options string. Passes options to kitr::opts_chunk$set(). Defaults to ""
 #' @param title title of the markdown. Defaults to ""
 #' @param author author. Defaults to ""
-#' @param date day of creation as string. Defaults to today()
-#' @param ... arguments passed to \code{\linl{md_to_Rmd}} such as the python path used for reticulate
+#' @param date day of creation as string. Defaults to \code{\link{today()}}
+#' @param ... arguments passed to \code{\link{md_to_Rmd}} such as the python path used for reticulate
 #' @export
 ipynb_to_blogdown_post <- function(ipynb_file,
                                    chunk_options = "",
                                    title = "",
                                    author = "",
-                                   date=today(),
+                                   date=lubridate::today(),
                                    ...){
   if (title == "") title <- str_replace( basename( ipynb_file), ".ipynb", "")
   slug <- make_slug(title)
-  file_name <- glue("{today()}-{slug}.Rmd")
+  file_name <- glue::glue("{date}-{slug}.Rmd")
   output_file <- here::here("content", "post", file_name)
   ipynb_to_Rmd(ipynb_file, output_file = output_file,
                title=title, author=author, date=date,

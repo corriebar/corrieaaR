@@ -10,7 +10,7 @@ md_to_Rmd(
   chunk_options = "",
   title = "",
   author = "",
-  date = today(),
+  date = lubridate::today(),
   blogdown = FALSE,
   python_path = reticulate::py_config()$python
 )

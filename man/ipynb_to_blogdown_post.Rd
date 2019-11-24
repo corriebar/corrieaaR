@@ -9,7 +9,7 @@ ipynb_to_blogdown_post(
   chunk_options = "",
   title = "",
   author = "",
-  date = today(),
+  date = lubridate::today(),
   ...
 )
 }
@@ -22,9 +22,9 @@ ipynb_to_blogdown_post(
 
 \item{author}{author. Defaults to ""}
 
-\item{date}{day of creation as string. Defaults to today()}
+\item{date}{day of creation as string. Defaults to \code{\link{today()}}}
 
-\item{...}{arguments passed to \code{\linl{md_to_Rmd}} such as the python path used for reticulate}
+\item{...}{arguments passed to \code{\link{md_to_Rmd}} such as the python path used for reticulate}
 }
 \description{
 Converts a jupyter notebook to a Blogdown post.

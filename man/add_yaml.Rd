@@ -4,7 +4,13 @@
 \alias{add_yaml}
 \title{Add a YAML header}
 \usage{
-add_yaml(md_text, title = "", author = "", date = today(), blogdown = FALSE)
+add_yaml(
+  md_text,
+  title = "",
+  author = "",
+  date = lubridate::today(),
+  blogdown = FALSE
+)
 }
 \arguments{
 \item{md_text}{markdown text as string}
