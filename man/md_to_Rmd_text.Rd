@@ -13,9 +13,9 @@ md_to_Rmd_text(
 \arguments{
 \item{md_file}{path to the markdown file}
 
-\item{chunk_options}{string. Passes options to \code{\link{knitr::opts_chunk$set()}}. Defaults to ""}
+\item{chunk_options}{string. Passes options to \code{\link[knitr:opts_chunk]{knitr::opts_chunk$set()}}. Defaults to ""}
 
-\item{python_path}{python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}}
+\item{python_path}{python path as string for reticulate. Defaults to the one detected by \code{\link[reticulate:py_config]{reticulate::py_config()}}}
 }
 \description{
 Converts a markdown file containing python code chunks to a

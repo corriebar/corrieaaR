@@ -19,7 +19,8 @@ Rmd_from_ipynb(
 
 \item{chunk_options}{global chunk options as charachter vector. Passes options to kitr::opts_chunk$set(). Defaults to ""}
 
-\item{python_path}{python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}}
+\item{python_path}{python path as string for reticulate. Defaults to the one
+detected by \code{\link[reticulate:py_config]{reticulate::py_config()}}}
 
 \item{open}{whether to open the generated file after creation}
 

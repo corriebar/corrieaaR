@@ -25,9 +25,9 @@ new_post_from_ipynb(
 \arguments{
 \item{ipynb_file}{path to the jupyter notebook}
 
-\item{chunk_options}{global chunk options as charachter vector. Passes options to \code{\link{knitr::opts_chunk$set()}}. Defaults to ""}
+\item{chunk_options}{global chunk options as charachter vector. Passes options to \code{\link[knitr:opts_chunk]{knitr::opts_chunk$set()}}. Defaults to ""}
 
-\item{python_path}{python path as string for reticulate. Defaults to the one detected by \code{\link{reticulate::py_config()}}}
+\item{python_path}{python path as string for reticulate. Defaults to the one detected by \code{\link[reticulate:py_config]{reticulate::py_config()}}}
 
 \item{title}{title of the markdown. Defaults to the name of the notebook}
 
@@ -58,8 +58,9 @@ Returns the file name of the newly generated file.
 }
 \description{
 Creates a new blogdown post and appends the jupyter
-notebook content as Rmd-style text.
+notebook content as Rmd-style text. The notebook
+gets transformed into a runnable Rmd with python chunks.
 }
 \seealso{
-[blogdown::new_post()] which this function wraps.
+\code{\link[blogdown:new_post]{blogdown::new_post()}} for which this function is a wrapper.
 }
